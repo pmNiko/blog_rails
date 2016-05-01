@@ -1,4 +1,8 @@
 class ArticlesController < ApplicationController
+  def index
+    flash[:notice] = "This is a notice"
+    @articles = Article.all
+  end
 
   def index
     @articles = Article.all
@@ -9,7 +13,7 @@ class ArticlesController < ApplicationController
   end
 
   def new
-
+    @article = Article.new
   end
 
   def create
@@ -31,9 +35,10 @@ class ArticlesController < ApplicationController
   def update
     @article = Article.find(params[:id])
 
-    if @article.update(article_params)
+    begin
+      @article.update!(article_params)
       redirect_to @article
-    else
+    rescue ActiveRecord::RecordInvalid
       render 'edit'
     end
   end
