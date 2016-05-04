@@ -1,6 +1,5 @@
 class ArticlesController < ApplicationController
   def index
-    flash[:notice] = "This is a notice"
     @articles = Article.all
   end
 
@@ -12,10 +11,48 @@ class ArticlesController < ApplicationController
     @article = Article.new
   end
 
+  def without_news
+    flash[:notice] = ''
+  end
+
+  def send_error
+    if @article.errors.any?
+      messages_error = '<div id="error_explanation"> ' +
+      '<h2>' + @article.errors.count.to_s +
+      ' error(s) prohibited this article from beign saved:' '</h2><ul>'
+
+      @article.errors.full_messages.each do |msg|
+        messages_error = messages_error + '<li>' + msg + '</li>'
+      end
+    messages_error + '</ul></div>'
+    flash[:notice] = messages_error.html_safe
+    end
+  end
+
   def create
     article = Article.new(article_params)
-    article.save
-    redirect_to article
+
+    begin
+      article.save!
+      without_news
+      redirect_to article
+    rescue ActiveRecord::RecordInvalid
+      send_error
+      render 'new'
+    end
+  end
+
+  def update
+    @article = Article.find(params[:id])
+
+    begin
+      @article.update!(article_params)
+      without_news
+      redirect_to @article
+    rescue ActiveRecord::RecordInvalid
+      send_error
+      render 'edit'
+    end
   end
 
   def destroy
@@ -28,16 +65,6 @@ class ArticlesController < ApplicationController
     @article = Article.find(params[:id])
   end
 
-  def update
-    @article = Article.find(params[:id])
-
-    begin
-      @article.update!(article_params)
-      redirect_to @article
-    rescue ActiveRecord::RecordInvalid
-      render 'edit'
-    end
-  end
 
   private
     def article_params

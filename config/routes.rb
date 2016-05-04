@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
-  root 'articles#index'
+  root 'articles#welcome'
+
+  get '/articles/welcome',
+    to: 'articles#welcome',
+    as: 'welcome_article'
+    
   resources :articles
+
 =begin
   get '/articles',
     to: 'articles#index',
