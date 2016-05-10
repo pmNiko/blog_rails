@@ -16,6 +16,7 @@ class ArticlesController < ApplicationController
   end
 
   def send_error
+=begin
     if @article.errors.any?
       messages_error = '<div id="error_explanation"> ' \
                        '<h2>' + @article.errors.count.to_s +
@@ -27,6 +28,8 @@ class ArticlesController < ApplicationController
       messages_error + '</ul></div>'
       flash[:notice] = messages_error.html_safe
     end
+=end
+    flash[:notice] = @article.errors.full_messages
   end
 
   def create
