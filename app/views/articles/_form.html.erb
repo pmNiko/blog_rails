@@ -1,6 +1,7 @@
 <%flash.each do |name, msg|%>
     <%= content_tag(:div,msg, :class => "flash_#{name}")%>
 <%end%>
+    
 <%= form_for @article do |f| %>
   <p>
     <%= f.label :title %><br>

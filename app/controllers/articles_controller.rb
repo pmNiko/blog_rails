@@ -33,12 +33,12 @@ class ArticlesController < ApplicationController
   end
 
   def create
-    article = Article.new(article_params)
-    article.author = current_user
+    @article = Article.new(article_params)
+    @article.author = current_user
 
     begin
-      article.save!
-      without_news
+      @article.save!
+      #without_news
       redirect_to article
     rescue ActiveRecord::RecordInvalid
       send_error
