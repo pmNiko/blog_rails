@@ -3,9 +3,9 @@ source 'https://rubygems.org'
 group :development do
   gem 'rails_layout'
 end
-
 gem 'bootstrap-sass'
 gem 'rolify', '~> 5.1'
+gem 'pundit', '~> 1.1.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'
 # Use sqlite3 as the database for Active Record

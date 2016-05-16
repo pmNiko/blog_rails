@@ -1,12 +1,12 @@
 Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   devise_for :users
-  root 'articles#welcome'
+  root 'articles#index'
 
   get '/articles/welcome',
     to: 'articles#welcome',
     as: 'welcome_article'
-    
+
   resources :articles
 
 =begin

@@ -1,6 +1,10 @@
 class ArticlesController < ApplicationController
+  skip_before_action :authenticate_user!, only: [:index, :show]
   def index
-    @articles = current_user.articles
+    @articles = Article
+    .all
+    .limit(10)
+    .order(created_at: :desc)
   end
 
   def show
@@ -11,25 +15,8 @@ class ArticlesController < ApplicationController
     @article = Article.new
   end
 
-  def without_news
-    flash[:notice] = ''
-  end
-
   def send_error
-=begin
-    if @article.errors.any?
-      messages_error = '<div id="error_explanation"> ' \
-                       '<h2>' + @article.errors.count.to_s +
-                       ' error(s) prohibited this article from beign saved:' '</h2><ul>'
-
-      @article.errors.full_messages.each do |msg|
-        messages_error = messages_error + '<li>' + msg + '</li>'
-      end
-      messages_error + '</ul></div>'
-      flash[:notice] = messages_error.html_safe
-    end
-=end
-    flash[:notice] = @article.errors.full_messages
+    flash.now[:error] = @article.errors.full_messages.to_sentence
   end
 
   def create
@@ -38,7 +25,6 @@ class ArticlesController < ApplicationController
 
     begin
       @article.save!
-      #without_news
       redirect_to article
     rescue ActiveRecord::RecordInvalid
       send_error
@@ -48,10 +34,10 @@ class ArticlesController < ApplicationController
 
   def update
     @article = Article.find(params[:id])
+    authorize @article
 
     begin
       @article.update!(article_params)
-      without_news
       redirect_to @article
     rescue ActiveRecord::RecordInvalid
       send_error
@@ -61,16 +47,19 @@ class ArticlesController < ApplicationController
 
   def destroy
     @article = Article.find(params[:id])
+    authorize @article
+
     @article.destroy
     redirect_to articles_path
   end
 
+
   def edit
     @article = Article.find(params[:id])
+    authorize @article
   end
 
   private
-
   def article_params
     params.require(:article).permit(:title, :text)
   end
