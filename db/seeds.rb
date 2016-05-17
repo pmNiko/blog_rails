@@ -1,5 +1,3 @@
-
-
 joeUser = User.new(
   :email                 => "joe@example.com",
   :password              => "12345678",

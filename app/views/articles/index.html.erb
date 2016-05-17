@@ -5,7 +5,7 @@
     <%= link_to article.title, article_path(article) %>
   </h3>
 <%end%>
-<% if current_user.present?%>
+<% if policy(Article).new?%>
   <%= link_to 'New article', new_article_path %>
 <%end%>
 

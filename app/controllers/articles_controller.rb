@@ -1,5 +1,7 @@
 class ArticlesController < ApplicationController
   skip_before_action :authenticate_user!, only: [:index, :show]
+  after_action :verify_authorized, :except => :index
+
   def index
     @articles = Article
     .all
@@ -9,9 +11,11 @@ class ArticlesController < ApplicationController
 
   def show
     @article = Article.find(params[:id])
+    authorize @article
   end
 
   def new
+    authorize Article
     @article = Article.new
   end
 
@@ -22,7 +26,7 @@ class ArticlesController < ApplicationController
   def create
     @article = Article.new(article_params)
     @article.author = current_user
-
+    authorize @article
     begin
       @article.save!
       redirect_to article
@@ -40,7 +44,7 @@ class ArticlesController < ApplicationController
       @article.update!(article_params)
       redirect_to @article
     rescue ActiveRecord::RecordInvalid
-      send_error
+      #send_error
       render 'edit'
     end
   end

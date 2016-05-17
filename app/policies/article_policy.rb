@@ -3,8 +3,9 @@ class ArticlePolicy < ApplicationPolicy
     true
   end
 
-  def update
-    record.author == user
+  def update?
+    user.present? &&
+    ((record.author == user) || (user.has_role? :admin))
   end
 
   def create?
@@ -15,7 +16,8 @@ class ArticlePolicy < ApplicationPolicy
     user.present?
   end
 
-  def destroy
-    record.author == user
+  def destroy?
+    user.present? &&
+    ((record.author == user) || (user.has_role? :admin))
   end
 end
