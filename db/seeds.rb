@@ -13,18 +13,21 @@ janeUser = User.new(
 )
 janeUser.save!
 
-Category.create!(name: 'OOP')
-Category.create!(name: 'Programing')
-Category.create!(name: 'Smalltalk')
+oopCategory = Category.create!(name: 'OOP')
+programingCategory = Category.create!(name: 'Programing')
+smalltalkCCategory = Category.create!(name: 'Smalltalk')
 
 for i in 0..15
-  Article.create!({
+  article = Article.create!({
     title: "Post number #{i}",
     text: "My #{i} post!",
     author: joeUser,
-    :categories => Category.where(:name =>['OOP', 'Programing'])
+    #:categories => Category.where(:name =>['OOP', 'Programing'])
   });
+  article.add_category(oopCategory)
+  article.add_category(programingCategory)
 end
 
-Article.create!(title: 'Hi everybody!',  text: "This is Jane's first post", author: janeUser,
-                :categories => Category.where(:name =>['OOP', 'Smalltalk']));
+article = Article.create!(title: 'Hi everybody!',  text: "This is Jane's first post", author: janeUser)
+article.add_category(oopCategory)
+article.add_category(smalltalkCCategory)
